@@ -1,27 +1,30 @@
-// integrations/mpesa/mpesa.routes.js
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const MpesaService = require("./mpesa.service");
+const mpesaService = require('./mpesa.service');
 
-// Example: initiate payment
-router.post("/pay", async (req, res) => {
+// GET test endpoint
+router.get('/', (req, res) => {
+  res.json({ message: '✅ M-Pesa API connected successfully!' });
+});
+
+// POST simulate transaction
+router.post('/simulate', async (req, res) => {
+  const { phone, amount } = req.body;
   try {
-    const { phone, amount } = req.body;
-    const response = await MpesaService.initiatePayment(phone, amount);
-    res.json({ success: true, data: response });
+    const result = await mpesaService.simulateTransaction({ phone, amount });
+    res.json(result);
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ error: error.message });
   }
 });
 
-// Example: check transaction status
-router.get("/status/:transactionId", async (req, res) => {
+// GET check balance
+router.get('/balance', async (req, res) => {
   try {
-    const { transactionId } = req.params;
-    const response = await MpesaService.checkTransaction(transactionId);
-    res.json({ success: true, data: response });
+    const result = await mpesaService.checkBalance();
+    res.json(result);
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ error: error.message });
   }
 });
 

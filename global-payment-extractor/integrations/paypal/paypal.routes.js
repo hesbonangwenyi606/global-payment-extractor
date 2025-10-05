@@ -1,14 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const { getPaypalBalance } = require('./paypal.service');
-const { formatResponse } = require('../../core/utils/helpers');
 
-router.get('/balance', async (req, res) => {
+// Import PayPal service (correct path!)
+const paypalService = require('./paypal.service');
+
+// Test endpoint
+router.get('/', (req, res) => {
+  res.send('PayPal API connected successfully!');
+});
+
+// Example payment endpoint
+router.post('/pay', async (req, res) => {
   try {
-    const balance = await getPaypalBalance();
-    res.json(formatResponse(true, balance, "PayPal balance retrieved"));
-  } catch (err) {
-    res.status(500).json(formatResponse(false, null, "Failed to fetch PayPal balance"));
+    const result = await paypalService.createPayment(req.body);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 

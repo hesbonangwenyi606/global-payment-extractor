@@ -1,2 +1,5 @@
-const paypalRoutes = require('./paypal.routes');
-module.exports = { paypalRoutes };
+const stripeRoutes = require('./stripe.routes');
+
+module.exports = {
+  routes: stripeRoutes,
+};
